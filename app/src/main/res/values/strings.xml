@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Convert Currency</string>
+    <string name="all_currencies">All Currencies</string>
+    <string name="my_currencies">My Currencies</string>
+
+
+    <string name="error_no_connection">Please check your network</string>
+    <string name="error_no_cached_data">Can\'t get data</string>
+
+    <string name="error_server">Server error. Please try latter</string>
+    <string name="error_global">Something went wrong</string>
+
+</resources>
