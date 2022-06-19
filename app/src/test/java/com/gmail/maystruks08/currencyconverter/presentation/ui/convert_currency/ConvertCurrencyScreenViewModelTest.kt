@@ -57,7 +57,7 @@ class ConvertCurrencyScreenViewModelTest {
 
         assertTrue(currencyViewModel.uiState.value is ConvertCurrencyViewState.Loading)
 
-        currencyViewModel.setEvent(ConvertCurrencyComposeEvent.Reload(currencyCodeTo, 0.0))
+        currencyViewModel.setEvent(ConvertCurrencyComposeEvent.ConvertCurrency(currencyCodeTo, 0.0))
 
         assertTrue(currencyViewModel.uiState.value is ConvertCurrencyViewState.Success)
         assertTrue((currencyViewModel.uiState.value as ConvertCurrencyViewState.Success).toCurrency == itemViewTo)

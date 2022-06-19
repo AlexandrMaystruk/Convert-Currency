@@ -12,10 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.gmail.maystruks08.currencyconverter.presentation.theme.Grey
-import com.gmail.maystruks08.currencyconverter.presentation.theme.Spacing
-import com.gmail.maystruks08.currencyconverter.presentation.theme.Typography
+import androidx.compose.ui.unit.dp
+import com.gmail.maystruks08.currencyconverter.presentation.theme.*
 import com.gmail.maystruks08.currencyconverter.presentation.ui.convert_currency.models.ConvertCurrencyView
+import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.DecimalInputProcessor
+import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.DecimalInputProcessor.Companion.COMMAND_CLEAR
+import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.DecimalInputProcessor.Companion.COMMAND_OK
+import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.DecimalInputProcessor.Companion.KEY_0
+import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.DecimalInputProcessor.Companion.KEY_DOUBLE_ZERO
+import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.DecimalInputProcessor.Companion.KEY_POINT
 import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.commonviews.LineSpacer
 
 @Composable
@@ -39,14 +44,14 @@ internal fun ContentView(
                 fromCurrencyItemView.code,
                 amountValue.value
             )
-            LineSpacer()
+            LineSpacer(0.2.dp)
             CurrencyRowItem(
                 false,
                 toCurrencyItemView.symbol,
                 toCurrencyItemView.code,
                 toCurrencyItemView.total
             )
-            LineSpacer()
+            LineSpacer(0.2.dp)
         }
         CustomKeyboard(amountValue, onConvertCurrencyClicked)
     }
@@ -71,15 +76,30 @@ fun CurrencyRowItem(
         Text(
             text = code,
             modifier = Modifier.weight(1f),
-            style = Typography.h2
+            style = Typography.h3
         )
 
-        Text(
-            text = amountValue,
-            modifier = Modifier.weight(3f),
-            textAlign = TextAlign.End,
-            style = Typography.h2
-        )
+        if (isEditMode) {
+            LargeSpacer()
+            Column(
+                modifier = Modifier.weight(3f),
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = amountValue,
+                    textAlign = TextAlign.End,
+                    style = Typography.h3
+                )
+                LineSpacer()
+            }
+        } else {
+            Text(
+                text = amountValue,
+                modifier = Modifier.weight(3f),
+                textAlign = TextAlign.End,
+                style = Typography.h3
+            )
+        }
     }
 }
 
@@ -89,36 +109,21 @@ fun CustomKeyboard(
     amountValue: MutableState<String>,
     onConvertCurrencyClicked: (amount: Double) -> Unit
 ) {
-    //TODO move key code handling to different class and handle all cases
+    val inputProcessor = remember { DecimalInputProcessor() }
     val onClick: (String) -> Unit = remember {
         { keyCode ->
-            if (keysArray.firstOrNull { it == keyCode } != null) {
-                amountValue.value += keyCode
-            }
+            amountValue.value = inputProcessor.nextValue(keyCode).toString()
             when (keyCode) {
-                ACTION_KEY_CODE_CLEAR -> amountValue.value = ""
-                KEY_CODE_DOT -> {
-                    if (amountValue.value.isEmpty()) {
-                        amountValue.value = keysArray[0] + keyCode
-                    } else {
-                        if (!amountValue.value.contains(KEY_CODE_DOT)) {
-                            amountValue.value += keyCode
-                        }
-                    }
-                }
-                KEY_CODE_00 -> {
-                    if (amountValue.value.contains(KEY_CODE_DOT)) {
-
-                    }
-                }
-                ACTION_KEY_CODE_OK -> onConvertCurrencyClicked.invoke(amountValue.value.toDouble())
+                COMMAND_CLEAR -> amountValue.value = ""
+                COMMAND_OK -> onConvertCurrencyClicked.invoke(amountValue.value.toDouble())
+                else -> Unit
             }
         }
     }
 
     Box(
         modifier = Modifier
-            .fillMaxHeight(0.35f)
+            .fillMaxHeight(0.45f)
             .background(Grey)
     ) {
         Row(modifier = Modifier.padding(Spacing.medium)) {
@@ -170,12 +175,12 @@ fun CustomKeyboard(
                         .weight(1f)
                 ) {
                     NumberButton(
-                        number = KEY_CODE_0,
+                        number = KEY_0,
                         onClick = onClick,
                         modifier = Modifier.weight(2f)
                     )
                     NumberButton(
-                        number = KEY_CODE_DOT,
+                        number = KEY_POINT,
                         onClick = onClick,
                         modifier = Modifier.weight(1f)
                     )
@@ -184,17 +189,17 @@ fun CustomKeyboard(
 
             Column(modifier = Modifier.weight(1f)) {
                 NumberButton(
-                    number = ACTION_KEY_CODE_CLEAR,
+                    number = COMMAND_CLEAR,
                     onClick = onClick,
                     modifier = Modifier.weight(1f)
                 )
                 NumberButton(
-                    number = KEY_CODE_00,
+                    number = KEY_DOUBLE_ZERO,
                     onClick = onClick,
                     modifier = Modifier.weight(1f)
                 )
                 NumberButton(
-                    number = ACTION_KEY_CODE_OK,
+                    number = COMMAND_OK,
                     onClick = onClick,
                     modifier = Modifier.weight(2f)
                 )
@@ -211,13 +216,14 @@ private fun NumberButton(
 ) {
     Button(
         onClick = { onClick(number) },
+        shape = Shapes.large,
         modifier = modifier
             .fillMaxSize()
             .padding(Spacing.extraSmall),
     ) {
         Text(
             text = number,
-            style = Typography.button
+            style = Typography.h2
         )
     }
 }
@@ -231,15 +237,3 @@ fun ContentView_Preview() {
         ConvertCurrencyView("%", "200", "200")
     ) {}
 }
-
-val keysArray = Array(10) { "" }
-    .apply {
-        for (index in 0..9) this[index] = index.toString()
-    }
-
-
-const val KEY_CODE_DOT = "."
-const val KEY_CODE_0 = "0"
-const val KEY_CODE_00 = "00"
-const val ACTION_KEY_CODE_CLEAR = "<"
-const val ACTION_KEY_CODE_OK = "ok"

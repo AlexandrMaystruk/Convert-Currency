@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 @ExperimentalMaterialApi
 fun CurrenciesScreen(
+    toolbarTitle: String,
     screenMode: ScreenMode,
     viewModel: CurrenciesScreenViewModel,
     navController: NavHostController
@@ -35,6 +36,7 @@ fun CurrenciesScreen(
     Scaffold(
         topBar = {
             TopBarView(
+                title = toolbarTitle,
                 onSearchTextChanged = { filterQuery ->
                     searchQuery.value = filterQuery
                 },

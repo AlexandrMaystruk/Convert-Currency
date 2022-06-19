@@ -38,7 +38,7 @@ fun ConvertCurrencyScreen(
                         toCurrencyItemView = state.toCurrency,
                         onConvertCurrencyClicked = {
                             viewModel.setEvent(
-                                ConvertCurrencyComposeEvent.Reload(selectedCurrencyCode, it)
+                                ConvertCurrencyComposeEvent.ConvertCurrency(selectedCurrencyCode, it)
                             )
                         }
                     )
@@ -59,6 +59,6 @@ fun ConvertCurrencyScreen(
                 }
             }
         }
-        viewModel.setEvent(ConvertCurrencyComposeEvent.Reload(selectedCurrencyCode, 0.0))
+        viewModel.setEvent(ConvertCurrencyComposeEvent.ConvertCurrency(selectedCurrencyCode, 0.0))
     })
 }

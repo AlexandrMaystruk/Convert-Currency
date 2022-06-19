@@ -24,5 +24,5 @@ data class Motd(var msg: String? = null, var url: String? = null)
 data class Query(
     var from: String? = null,
     var to: String? = null,
-    var amount: Int? = null
+    var amount: Double? = null
 )

@@ -26,6 +26,7 @@ import com.gmail.maystruks08.currencyconverter.presentation.theme.White
 
 @Composable
 internal fun TopBarView(
+    title: String,
     onSearchTextChanged: (filterQuery: String) -> Unit,
     onSearchClosed: () -> Unit
 ) {
@@ -34,6 +35,7 @@ internal fun TopBarView(
     TopAppBar(
         title = {
             ToolbarTitle(
+                title,
                 isSearchMode,
                 onSearchTextChanged,
                 onSearchClosed
@@ -48,6 +50,7 @@ internal fun TopBarView(
 
 @Composable
 internal fun ToolbarTitle(
+    title: String,
     isSearchMode: MutableState<Boolean>,
     onSearchTextChanged: (filterQuery: String) -> Unit,
     onSearchClosed: () -> Unit,
@@ -102,7 +105,7 @@ internal fun ToolbarTitle(
         SideEffect { focusRequester.requestFocus() }
     }
     AnimatedVisibility(visible = !isSearchMode.value) {
-        Text(text = "Home Screen")
+        Text(text = title)
     }
 }
 
@@ -149,5 +152,5 @@ internal fun MenuActions(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenTopBar_Preview() {
-    TopBarView({}, {})
+    TopBarView("All currencies", {}, {})
 }

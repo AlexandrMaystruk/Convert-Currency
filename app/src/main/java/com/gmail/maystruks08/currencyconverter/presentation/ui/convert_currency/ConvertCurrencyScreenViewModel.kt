@@ -34,7 +34,7 @@ class ConvertCurrencyScreenViewModel @Inject constructor(
     ) {
         Timber.d("Current state: $currentState, event: $event")
         when (event) {
-            is ConvertCurrencyComposeEvent.Reload -> reloadContent(
+            is ConvertCurrencyComposeEvent.ConvertCurrency -> reloadContent(
                 event.selectedCurrencyCode,
                 event.amount
             )
@@ -48,7 +48,7 @@ class ConvertCurrencyScreenViewModel @Inject constructor(
     ) {
         Timber.d("Current state: $currentState, event: $event")
         when (event) {
-            is ConvertCurrencyComposeEvent.Reload -> reloadContent(
+            is ConvertCurrencyComposeEvent.ConvertCurrency -> reloadContent(
                 event.selectedCurrencyCode,
                 event.amount
             )

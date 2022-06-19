@@ -8,7 +8,7 @@ import com.gmail.maystruks08.currencyconverter.presentation.ui.utils.base.UiStat
 
 sealed class ConvertCurrencyComposeEvent : UiEvent {
 
-    data class Reload(
+    data class ConvertCurrency(
         val selectedCurrencyCode: String,
         val amount: Double
     ) : ConvertCurrencyComposeEvent()

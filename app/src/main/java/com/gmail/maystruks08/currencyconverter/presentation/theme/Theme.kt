@@ -9,9 +9,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = Color(0xFF673AB7),
-    primaryVariant = Color(0xFF522B99),
-    secondary = Color(0xFF03C1DA),
+    primary = Color(0xFF3F51B5),
+    primaryVariant = Color(0xFF2196F3),
+    secondary = Color(0xFF037DDA),
     background = Color(0xFF121212),
     surface = Color(0xFF121212),
     error = Color(0xFFD50000),
@@ -24,9 +24,9 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Color(0xFF673AB7),
-    primaryVariant = Color(0xFF522B99),
-    secondary = Color(0xFF03C1DA),
+    primary = Color(0xFF3F51B5),
+    primaryVariant = Color(0xFF2196F3),
+    secondary = Color(0xFF037DDA),
     background = Color(0xFFFFFFFF),
     surface = Color(0xFFFFFFFF),
     error = Color(0xFFD50000),

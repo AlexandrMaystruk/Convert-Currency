@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +27,7 @@ import androidx.navigation.navArgument
 import com.gmail.maystruks08.currencyconverter.presentation.navigation.AppNavigation
 import com.gmail.maystruks08.currencyconverter.presentation.theme.ConvertCurrencyTheme
 import com.gmail.maystruks08.currencyconverter.presentation.theme.Spacing
+import com.gmail.maystruks08.currencyconverter.presentation.theme.White
 import com.gmail.maystruks08.currencyconverter.presentation.ui.convert_currency.ConvertCurrencyScreen
 import com.gmail.maystruks08.currencyconverter.presentation.ui.home.CurrenciesScreen
 import com.gmail.maystruks08.currencyconverter.presentation.ui.home.models.ScreenMode
@@ -62,34 +65,38 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun AppBottomNavigation(appState: AppState) {
-    if (!appState.isBottomBarVisible) return
-
-    Row(
-        modifier = Modifier
-            .background(MaterialTheme.colors.background)
-            .padding(Spacing.small)
-            .clickable(enabled = false) { }
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
+    AnimatedVisibility(
+        visible = appState.isBottomBarVisible,
+        enter = fadeIn(),
+        exit = fadeOut()
     ) {
-        appState.bottomBarItems.forEach {
-            CustomBottomNavigationItem(
-                item = it,
-                isSelected = it == appState.currentSelectedBottomNavigationScreen.value,
-                onClick = {
-                    if (it != appState.currentSelectedBottomNavigationScreen.value) {
-                        val previousRoute =
-                            appState.currentSelectedBottomNavigationScreen.value.route
-                        appState.currentSelectedBottomNavigationScreen.value = it
-                        appState.navController.navigate(it.route) {
-                            popUpTo(previousRoute) {
-                                inclusive = true
+        Row(
+            modifier = Modifier
+                .background(MaterialTheme.colors.primary)
+                .padding(Spacing.small)
+                .clickable(enabled = false) { }
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            appState.bottomBarItems.forEach {
+                CustomBottomNavigationItem(
+                    item = it,
+                    isSelected = it == appState.currentSelectedBottomNavigationScreen.value,
+                    onClick = {
+                        if (it != appState.currentSelectedBottomNavigationScreen.value) {
+                            val previousRoute =
+                                appState.currentSelectedBottomNavigationScreen.value.route
+                            appState.currentSelectedBottomNavigationScreen.value = it
+                            appState.navController.navigate(it.route) {
+                                popUpTo(previousRoute) {
+                                    inclusive = true
+                                }
                             }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
@@ -101,12 +108,12 @@ private fun CustomBottomNavigationItem(
     onClick: () -> Unit
 ) {
     val background =
-        if (isSelected) MaterialTheme.colors.primary.copy(0.1f)
+        if (isSelected) White.copy(0.1f)
         else Color.Transparent
 
     val contentColor =
-        if (isSelected) MaterialTheme.colors.primary
-        else MaterialTheme.colors.onBackground
+        if (isSelected) White
+        else White.copy(0.5f)
 
     Box(
         modifier = Modifier
@@ -148,6 +155,9 @@ private fun MainScreenNavigationConfigurations(appState: AppState) {
     ) {
         composable(AppNavigation.BottomNavigationScreens.AllCurrency.route) {
             CurrenciesScreen(
+                stringResource(
+                    AppNavigation.BottomNavigationScreens.AllCurrency.resourceId
+                ),
                 screenMode = ScreenMode.AllCurrency,
                 viewModel = hiltViewModel(),
                 navController = appState.navController
@@ -155,6 +165,9 @@ private fun MainScreenNavigationConfigurations(appState: AppState) {
         }
         composable(AppNavigation.BottomNavigationScreens.MyCurrency.route) {
             CurrenciesScreen(
+                stringResource(
+                    AppNavigation.BottomNavigationScreens.MyCurrency.resourceId
+                ),
                 screenMode = ScreenMode.MyCurrency,
                 viewModel = hiltViewModel(),
                 navController = appState.navController
