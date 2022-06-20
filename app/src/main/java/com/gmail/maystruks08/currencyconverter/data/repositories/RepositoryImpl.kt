@@ -42,6 +42,10 @@ class RepositoryImpl @Inject constructor(
                 }
             }
 
+            if (cachedData.isEmpty() && !networkUtil.isNetworkTurnedOn()) {
+                throw AppError.LocaleExceptions.NoCachedData
+            }
+
             if (!networkUtil.isNetworkTurnedOn()) return@flow
 
             val remoteResponse = currencyRemoteDataSource.fetchCurrencyList()

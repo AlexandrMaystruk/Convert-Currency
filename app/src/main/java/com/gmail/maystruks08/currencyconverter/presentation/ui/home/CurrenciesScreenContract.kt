@@ -34,7 +34,8 @@ sealed class CurrenciesViewState : UiState {
     ) : CurrenciesViewState()
 
     sealed class Error : CurrenciesViewState() {
-        object FetchDataFromServer : Error()
+        object NoInternet : Error()
+        object NoCachedData : Error()
         object GeneralError : Error()
     }
 

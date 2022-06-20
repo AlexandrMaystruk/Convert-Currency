@@ -8,7 +8,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.gmail.maystruks08.currencyconverter.R
 import com.gmail.maystruks08.currencyconverter.presentation.navigation.AppNavigation
 import com.gmail.maystruks08.currencyconverter.presentation.ui.home.models.ScreenMode
 import com.gmail.maystruks08.currencyconverter.presentation.ui.home.views.CurrencyItemsView
@@ -59,20 +61,17 @@ fun CurrenciesScreen(
                     }
                 }
                 is CurrenciesViewState.Error -> {
-                    when (state) {
-                        CurrenciesViewState.Error.GeneralError -> {
-                            RetryView(
-                                title = "Retry",
-                                icon = Icons.Rounded.Error,
-                                retryButtonClicked = {
-                                    viewModel.setEvent(CurrenciesScreenEvent.Reload(screenMode))
-                                })
-                        }
-
-                        else -> {
-
-                        }
+                    val title = when (state) {
+                        CurrenciesViewState.Error.GeneralError -> stringResource(id = R.string.error_global)
+                        CurrenciesViewState.Error.NoCachedData -> stringResource(id = R.string.error_no_cached_data)
+                        CurrenciesViewState.Error.NoInternet -> stringResource(id = R.string.error_no_connection)
                     }
+                    RetryView(
+                        title = title,
+                        icon = Icons.Rounded.Error,
+                        retryButtonClicked = {
+                            viewModel.setEvent(CurrenciesScreenEvent.Reload(screenMode))
+                        })
                 }
                 is CurrenciesViewState.Success -> CurrencyItemsView(
                     currencyItems = state.currencyItems,

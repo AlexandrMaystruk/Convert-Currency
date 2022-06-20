@@ -71,7 +71,7 @@ fun CurrencyRowItem(
         Text(
             text = symbol,
             modifier = Modifier.weight(1f),
-            style = Typography.h1
+            style = Typography.h2
         )
         Text(
             text = code,

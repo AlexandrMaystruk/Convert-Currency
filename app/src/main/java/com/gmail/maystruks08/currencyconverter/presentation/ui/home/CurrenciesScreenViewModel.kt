@@ -1,6 +1,7 @@
 package com.gmail.maystruks08.currencyconverter.presentation.ui.home
 
 import androidx.lifecycle.viewModelScope
+import com.gmail.maystruks08.currencyconverter.domain.exceptions.AppError
 import com.gmail.maystruks08.currencyconverter.domain.usecases.AddCurrencyToFavorite
 import com.gmail.maystruks08.currencyconverter.domain.usecases.FetchCurrenciesUseCase
 import com.gmail.maystruks08.currencyconverter.domain.usecases.RemoveCurrencyFromFavorite
@@ -85,8 +86,13 @@ class CurrenciesScreenViewModel @Inject constructor(
                 .invoke(onlyFavorite)
                 .cancellable()
                 .catch { exception ->
-                    setState { CurrenciesViewState.Error.GeneralError }
                     Timber.d(exception.localizedMessage.orEmpty())
+                    val error = when (exception) {
+                        is AppError.LocaleExceptions.NoCachedData -> CurrenciesViewState.Error.NoCachedData
+                        is AppError.LocaleExceptions.NoConnection -> CurrenciesViewState.Error.NoInternet
+                        else -> CurrenciesViewState.Error.GeneralError
+                    }
+                    setState { error }
                 }
                 .map { items ->
                     val isButtonVisible = screenMode is ScreenMode.AllCurrency
